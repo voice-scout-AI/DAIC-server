@@ -1,59 +1,57 @@
 import os
 import shutil
-from typing import Union
+from contextlib import asynccontextmanager
 
+import redis
 from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import JSONResponse
 
-app = FastAPI()
+from app.runnables.code_generator import CodeGenerator
+from app.services.process_images import ImageProcessorChain
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    app.state.redis_client = redis.Redis(host="localhost", port=6379, decode_responses=True)
+    yield
+    app.state.redis_client.close()
+
+
 UPLOAD_DIRECTORY = "./uploads"
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    value = app.state.redis_client.get("test")
+
+    return {"Hello": value}
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
-
-
-@app.post("/upload-image/")
-async def upload_image(image: UploadFile = File(...)):
-    file_extension = os.path.splitext(image.filename)[1].lower()
-    allowed_extensions = [".jpg", ".jpeg", ".png", ".gif"]
-
-    if file_extension not in allowed_extensions:
-        return JSONResponse(
-            status_code=400,
-            content={"message": "지원되지 않는 파일 형식입니다. JPG, JPEG, PNG, GIF 파일만 업로드할 수 있습니다."}
-        )
-
-    file_path = os.path.join(UPLOAD_DIRECTORY, image.filename)
-
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(image.file, buffer)
-
-    return {"filename": image.filename, "file_path": file_path}
-
-
-@app.post("/upload-multiple-images/")
-async def upload_multiple_images(images: list[UploadFile] = File(...)):
+@app.post("/upload-images/")
+async def upload_images(images: list[UploadFile] = File(...)):
     saved_files = []
 
     for image in images:
-        file_extension = os.path.splitext(image.filename)[1].lower()
-        allowed_extensions = [".jpg", ".jpeg", ".png", ".gif"]
-
-        if file_extension not in allowed_extensions:
-            continue
-
         file_path = os.path.join(UPLOAD_DIRECTORY, image.filename)
 
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(image.file, buffer)
 
-        saved_files.append({"filename": image.filename, "file_path": file_path})
+        saved_files.append(file_path)
 
-    return {"uploaded_files": saved_files, "total_count": len(saved_files)}
+    result = ImageProcessorChain().invoke(saved_files)
+
+    return result
+
+
+@app.post("/transform/")
+async def transform(body: dict):
+    result = CodeGenerator().invoke({
+        "id": body.get("id"),
+        "fromname": body.get("from", {}).get("name"),
+        "fromversion": body.get("from", {}).get("version"),
+        "toname": body.get("to", {}).get("name"),
+        "toversion": body.get("to", {}).get("version")
+    })
+
+    return result
