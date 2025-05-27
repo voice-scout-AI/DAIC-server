@@ -1,0 +1,88 @@
+{
+  "documents": [
+    {
+      "page_content": "React 18 이상으로 업그레이드할 때는 컴포넌트 클래스말고 함수로 선언해야함.",
+      "metadata": {
+        "from": "React",
+        "to": "React"
+      }
+    },
+    {
+      "page_content": "React에서 Vue로 마이그레이션할 때는 더 step-by-step으로 생각해줘.",
+      "metadata": {
+        "from": "React",
+        "to": "Vue"
+      }
+    },
+    {
+      "page_content": "Vue 2에서 Vue 3로 마이그레이션할 때 Composition API를 사용하면 더 나은 타입 추론과 로직 재사용이 가능합니다.",
+      "metadata": {
+        "from": "Vue 2",
+        "to": "Vue 3"
+      }
+    },
+    {
+      "page_content": "Angular에서 React로 전환할 때는 컴포넌트 기반 아키텍처는 유사하지만 상태 관리 방식이 다르므로 Redux나 Zustand 같은 상태 관리 라이브러리를 고려해야 합니다.",
+      "metadata": {
+        "from": "Angular",
+        "to": "React"
+      }
+    },
+    {
+      "page_content": "jQuery에서 React로 전환할 때는 DOM 직접 조작 방식에서 선언적 UI 방식으로 사고를 전환해야 합니다.",
+      "metadata": {
+        "from": "jQuery",
+        "to": "React"
+      }
+    },
+    {
+      "page_content": "Express.js에서 Fastify로 전환하면 더 빠른 성능과 TypeScript 지원을 얻을 수 있지만, 미들웨어 생태계가 다릅니다.",
+      "metadata": {
+        "from": "Express.js",
+        "to": "Fastify"
+      }
+    },
+    {
+      "page_content": "MongoDB에서 PostgreSQL로 전환할 때는 스키마 설계를 다시 해야 하고, NoSQL의 유연성 대신 ACID 트랜잭션의 안정성을 얻게 됩니다.",
+      "metadata": {
+        "from": "MongoDB",
+        "to": "PostgreSQL"
+      }
+    },
+    {
+      "page_content": "Webpack에서 Vite로 전환하면 개발 서버 시작 시간이 크게 단축되지만, 일부 플러그인 호환성 문제가 있을 수 있습니다.",
+      "metadata": {
+        "from": "Webpack",
+        "to": "Vite"
+      }
+    },
+    {
+      "page_content": "Jest에서 Vitest로 전환할 때는 설정이 간단해지고 ES 모듈 지원이 더 좋아지지만, 일부 Jest 특화 기능들을 다시 구현해야 할 수 있습니다.",
+      "metadata": {
+        "from": "Jest",
+        "to": "Vitest"
+      }
+    },
+    {
+      "page_content": "Sass에서 Tailwind CSS로 전환할 때는 유틸리티 퍼스트 접근법을 익혀야 하고, 커스텀 CSS 작성량이 크게 줄어듭니다.",
+      "metadata": {
+        "from": "Sass",
+        "to": "Tailwind CSS"
+      }
+    },
+    {
+      "page_content": "Redux에서 Zustand로 전환하면 보일러플레이트 코드가 크게 줄어들고 더 간단한 상태 관리가 가능하지만, 미들웨어 생태계는 제한적입니다.",
+      "metadata": {
+        "from": "Redux",
+        "to": "Zustand"
+      }
+    },
+    {
+      "page_content": "Next.js에서 Remix로 전환할 때는 서버 사이드 렌더링 방식이 다르므로 데이터 로딩 패턴을 새로 익혀야 합니다.",
+      "metadata": {
+        "from": "Next.js",
+        "to": "Remix"
+      }
+    }
+  ]
+}

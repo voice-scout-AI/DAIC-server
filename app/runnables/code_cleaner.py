@@ -1,13 +1,13 @@
 import uuid
 from typing import Optional, Dict, Any
 
-import redis
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import Runnable
 from langchain_upstage import ChatUpstage
 from pydantic import BaseModel, Field
 
-from app.core.config import EXTRACT_PROMPT, REDIS_HOST, REDIS_PORT
+from app.core.config import EXTRACT_PROMPT
+from app.core.state import app_state
 
 
 class CodeOutput(BaseModel):
@@ -30,8 +30,6 @@ class CodeCleaner(Runnable):
         result = self.chain.invoke({"code": input})
 
         id = str(uuid.uuid4())
-
-        r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT)
-        r.set(id, result.code)
+        app_state.redis_client.set(id, result.code)
 
         return {"id": id, "code": result.code}

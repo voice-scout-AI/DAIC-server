@@ -2,18 +2,20 @@ import os
 import shutil
 from contextlib import asynccontextmanager
 
-import redis
 from fastapi import FastAPI, File, UploadFile
 
-from app.runnables.code_generator import CodeGenerator
+from app.core.state import app_state
 from app.services.process_images import ImageProcessorChain
+from app.services.transform_code import CodeTransformerChain
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    app.state.redis_client = redis.Redis(host="localhost", port=6379, decode_responses=True)
+    app_state.initialize_redis(host="localhost", port=6379)
+    app_state.initialize_vector_store()
+
     yield
-    app.state.redis_client.close()
+    app_state.close_redis()
 
 
 UPLOAD_DIRECTORY = "./uploads"
@@ -22,7 +24,7 @@ app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
 def read_root():
-    value = app.state.redis_client.get("test")
+    value = app_state.redis_client.get("test")
 
     return {"Hello": value}
 
@@ -46,7 +48,7 @@ async def upload_images(images: list[UploadFile] = File(...)):
 
 @app.post("/transform/")
 async def transform(body: dict):
-    result = CodeGenerator().invoke({
+    result = CodeTransformerChain().invoke({
         "id": body.get("id"),
         "fromname": body.get("from", {}).get("name"),
         "fromversion": body.get("from", {}).get("version"),
