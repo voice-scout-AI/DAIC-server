@@ -3,6 +3,8 @@ from typing import List
 from langchain_core.runnables import Runnable
 from langchain_upstage import UpstageDocumentParseLoader
 
+from app.core.decorators import measure_time
+
 
 class DocumentParser(Runnable):
     def __init__(self):
@@ -21,5 +23,6 @@ class DocumentParser(Runnable):
 
         return combined_text
 
+    @measure_time
     def invoke(self, file_paths: List[str], config=None) -> str:
         return self.load_document(file_paths)

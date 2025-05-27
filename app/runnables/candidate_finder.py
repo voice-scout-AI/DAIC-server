@@ -5,7 +5,9 @@ from langchain_core.runnables import Runnable
 from langchain_upstage import ChatUpstage
 from pydantic import BaseModel, Field
 
-from app.core.config import CANDIDATE_FINDER_PROMPT
+from app.core.callbacks import PromptLoggerCallback
+from app.core.config import CANDIDATE_FINDER_PROMPT, DEBUG
+from app.core.decorators import measure_time
 
 
 class SuggestionInfo(BaseModel):
@@ -35,12 +37,13 @@ class CandidateFinder(Runnable):
 
         self.chain = self.candidate_prompt | self.structured_chat
 
+    @measure_time
     def invoke(self, input: Dict[str, Any], config=None) -> Dict[str, List[any]]:
         technologies_str = ""
         for tech in input["tech"]:
             technologies_str += f"ID: {tech['id']}, Name: {tech['name']}, Type: {tech['type']}, Versions: {tech['possible_versions']}\n"
 
-        result = self.chain.invoke({"technologies": technologies_str})
+        result = self.chain.invoke({"technologies": technologies_str}, config={"callbacks": [PromptLoggerCallback()]})
 
         candidates = []
         for candidate in result.candidates:

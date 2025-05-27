@@ -5,7 +5,9 @@ from langchain_core.runnables import Runnable
 from langchain_upstage import ChatUpstage
 from pydantic import BaseModel, Field
 
+from app.core.callbacks import PromptLoggerCallback
 from app.core.config import ANALYZE_PROMPT
+from app.core.decorators import measure_time
 
 
 class TechnologyInfo(BaseModel):
@@ -30,8 +32,9 @@ class CodeAnalyser(Runnable):
 
         self.chain = self.analysis_prompt | self.structured_chat
 
+    @measure_time
     def invoke(self, input: Dict[str, Any], config=None) -> Dict[str, Any]:
-        result = self.chain.invoke({"code": input['code']})
+        result = self.chain.invoke({"code": input['code']}, config={"callbacks": [PromptLoggerCallback()]})
 
         technologies = []
         for i, tech in enumerate(result.technologies):

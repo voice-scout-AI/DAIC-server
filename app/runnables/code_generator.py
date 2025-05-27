@@ -5,7 +5,9 @@ from langchain_core.runnables import Runnable
 from langchain_upstage import ChatUpstage
 from pydantic import BaseModel, Field
 
+from app.core.callbacks import PromptLoggerCallback
 from app.core.config import CODE_GENERATOR_PROMPT
+from app.core.decorators import measure_time
 from app.core.state import app_state
 
 
@@ -36,6 +38,7 @@ class CodeGenerator(Runnable):
         # 구조화된 출력을 사용하는 체인 구성
         self.chain = self.conversion_prompt | self.structured_chat
 
+    @measure_time
     def invoke(self, input: Dict[str, Any], config=None) -> Dict[str, Any]:
         # Redis에서 원본 코드 가져오기
         code = app_state.redis_client.get(input["id"])
@@ -47,6 +50,6 @@ class CodeGenerator(Runnable):
             "toname": input["toname"],
             "toversion": input["toversion"],
             "reference_docs": input["reference_docs"]
-        })
+        }, config={"callbacks": [PromptLoggerCallback()]})
 
         return {"original_code": code, "transformed_code": result.code}

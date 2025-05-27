@@ -6,7 +6,9 @@ from langchain_core.runnables import Runnable
 from langchain_upstage import ChatUpstage
 from pydantic import BaseModel, Field
 
+from app.core.callbacks import PromptLoggerCallback
 from app.core.config import EXTRACT_PROMPT
+from app.core.decorators import measure_time
 from app.core.state import app_state
 
 
@@ -26,8 +28,9 @@ class CodeCleaner(Runnable):
         # 구조화된 출력을 사용하는 체인 구성
         self.chain = self.conversion_prompt | self.structured_chat
 
+    @measure_time
     def invoke(self, input: str, config=None) -> Dict[str, Any]:
-        result = self.chain.invoke({"code": input})
+        result = self.chain.invoke({"code": input}, config={"callbacks": [PromptLoggerCallback()]})
 
         id = str(uuid.uuid4())
         app_state.redis_client.set(id, result.code)
