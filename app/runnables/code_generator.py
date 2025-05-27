@@ -22,10 +22,7 @@ class CodeGenerator(Runnable):
             schema=ConvertedCodeOutput)
         self.conversion_prompt = ChatPromptTemplate.from_messages([
             ("system", CODE_GENERATOR_PROMPT),
-            ("human", """Please transform the following code snippet:
-
-Source Technology: {fromname} {fromversion}
-Target Technology: {toname} {toversion}
+            ("human", """Please convert the following code from {fromname} {fromversion} to {toname} {toversion}:
 
 Reference Documentation:
 {reference_docs}
@@ -33,14 +30,14 @@ Reference Documentation:
 Original Code:
 {code}
 
-Convert this code to {toname} {toversion} while ensuring:
-1. Functional equivalence is preserved
-2. Target technology best practices and idiomatic patterns are followed
-3. Version-specific features and APIs of {toversion} are utilized appropriately
-4. All necessary dependencies and imports are included
-5. Reference documentation insights are incorporated for optimal conversion
+Requirements:
+1. Maintain the exact same functionality and behavior as the original code
+2. Use {toname} {toversion} syntax and equivalent APIs/methods
+3. Apply only the migration patterns and considerations mentioned in the reference documentation
+4. Keep the same code structure and logic flow where possible
+5. Include only the necessary imports and dependencies for the converted code
 
-Provide only the raw transformed code without any markdown formatting or explanatory text.""")
+Convert ONLY what is provided in the original code. Do not add extra features, error handling, or optimizations that weren't in the original.""")
         ])
 
         self.chain = self.conversion_prompt | self.structured_chat

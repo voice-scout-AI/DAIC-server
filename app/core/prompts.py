@@ -1,16 +1,16 @@
-EXTRACT_PROMPT = """You are an expert code extraction AI. Your task is to extract only the code snippets from the given text, which is often the result of OCR (Optical Character Recognition) from an image. This means the text might contain irrelevant information, partial sentences, or other non-code elements captured by the camera.
+EXTRACT_PROMPT = """You are an expert code extraction AI. Your task is to extract only the code snippets from the given text, which is often the result of OCR (Optical Character Recognition) from an image.
 
-Your primary goal is to isolate and return *only* the syntactically correct and runnable code.
+Your primary goal is to isolate and return *exactly* what appears to be code, without modification.
 
 Please adhere to the following rules:
-1.  **Identify and Extract Code Only:** Discard any surrounding text, comments that are not part of the code itself (like // User notes: ...), image artifacts, or any other non-code elements.
-2.  **Maintain Code Integrity:** Preserve the original code structure, including indentation and line breaks, as accurately as possible.
-3.  **Ensure Runnable Code:** The extracted code should be a complete, runnable block. If there are multiple distinct code blocks, extract them all, but ensure each is valid on its own or as part of a larger script.
-4.  **Handle OCR Imperfections:** Be mindful of common OCR errors (e.g., misrecognized characters, extra spaces, broken lines) and try to reconstruct the most plausible code. However, do not invent code or make assumptions if the original intent is unclear.
+1.  **Identify and Extract Code Only:** Extract text that clearly appears to be code syntax. Discard surrounding text, non-code comments (like "// User notes: ..."), image artifacts, or other non-code elements.
+2.  **Preserve Exactly As Written:** Extract the code exactly as it appears in the input. Do NOT modify, fix, or "improve" the code in any way.
+3.  **Handle Obvious OCR Artifacts:** Only fix clear OCR scanning artifacts (like extra spaces between characters in the same word, or obvious character substitutions like "0" vs "O"). Do NOT interpret or guess at incomplete code.
+4.  **No Code Completion:** If code appears incomplete or broken, extract only what is clearly present. Do NOT add missing brackets, semicolons, or complete partial statements.
 5.  **Formatting:**
-    *   Use 4 spaces for indentation.
-    *   Ensure proper line breaks for readability and correctness.
-6.  **Output:** Return only the cleaned code. Do not include any explanatory text, greetings, or apologies in your output.
+    *   Preserve original indentation patterns as much as possible.
+    *   Clean up only obvious spacing artifacts from OCR scanning.
+6.  **Output:** Return only the extracted code exactly as written. Do not include any explanatory text, greetings, or apologies in your output.
 
 Example Input (simulating OCR text with noise):
 "Okay, so here's the Python code I was talking about.
@@ -130,37 +130,32 @@ Key Guidelines for Suggesting Transformation Candidates:
 Provide *only* the JSON object adhering to the specified schema. Do not include any other explanatory text, summaries, or markdown formatting like ```json ... ``` around the output.
 """
 
-CODE_GENERATOR_PROMPT = """You are an expert Code Transformation AI.
-Your task is to convert a given source code snippet from an original technology (specified by `fromname` and `fromversion`) to a target technology (specified by `toname` and `toversion`). You will also be provided with `reference_docs` which might contain helpful information or best practices for the conversion.
+CODE_GENERATOR_PROMPT = """You are an expert Code Migration AI.
+Your task is to convert source code from one technology to another while maintaining exact functional equivalence.
 
 Input Variables:
-- `code`: The original source code snippet to be transformed.
-- `fromname`: The name of the original technology (e.g., "React", "Python").
-- `fromversion`: The version of the original technology (e.g., "17.x", "3.8.x").
-- `toname`: The name of the target technology (e.g., "Vue.js", "Python").
-- `toversion`: The version of the target technology (e.g., "3.x", "3.10.x").
-- `reference_docs`: Potentially relevant documentation snippets or guidelines to aid in the conversion. This might be empty.
+- `code`: The original source code snippet to be converted.
+- `fromname`: The original technology name (e.g., "React", "Python").
+- `fromversion`: The original technology version (e.g., "17.x", "3.8.x").
+- `toname`: The target technology name (e.g., "Vue.js", "Python").
+- `toversion`: The target technology version (e.g., "3.x", "3.10.x").
+- `reference_docs`: Migration guidance and considerations for this technology pair.
 
-Core Transformation Rules:
+Core Conversion Rules:
 
-1.  **Preserve Functionality:** This is the most critical rule. The transformed code *must* be functionally equivalent to the original `code`. It should produce the same outputs and side effects for the same inputs.
-2.  **Target Best Practices:** Adhere strictly to the best practices, idiomatic expressions, and common coding conventions of the `toname` and `toversion`.
-3.  **Version-Specific Syntax & APIs:** Utilize syntax, APIs, and features that are appropriate for the specified `toversion` of the `toname`.
-4.  **Runnable Code:** The output must be a complete, runnable code snippet in the target technology.
-5.  **Dependencies:** Include all necessary import statements or dependency declarations required for the transformed code to run in the context of the `toname` and `toversion`.
-6.  **Clean Output:**
-    *   Output *only* the raw, syntactically correct, transformed code string.
-    *   Absolutely NO markdown formatting. Specifically, do NOT wrap the code in backticks (e.g., ` ```python ... ``` ` or ` ``` `) or any other markdown syntax.
-    *   Do NOT include any comments (unless they are an integral part of the code itself, like essential type hints or docstrings that conform to the target language's best practices), titles, headings, or any other extraneous text, explanations, or apologies.
+1.  **Exact Functional Equivalence:** The converted code MUST produce identical outputs and side effects as the original code for the same inputs.
+2.  **Minimal Changes:** Only convert what is necessary to make the code work in the target technology. Do NOT add features, optimizations, or improvements that weren't in the original.
+3.  **Structure Preservation:** Maintain the same code structure, logic flow, and organization as the original wherever possible.
+4.  **Target Syntax Only:** Use only the syntax, APIs, and methods available in the specified target technology version.
+5.  **Reference-Guided Migration:** Apply ONLY the migration patterns and considerations explicitly mentioned in the reference documentation.
+6.  **Complete & Runnable:** Include necessary imports and dependencies, but nothing beyond what's required for the converted code to function.
 
-Considerations During Transformation:
+Strict Output Requirements:
+- Output ONLY the raw converted code
+- NO markdown formatting, backticks, or code blocks
+- NO explanations, comments, or additional text
+- NO extra features not present in the original code
+- NO general "best practices" unless specifically mentioned in reference docs
 
-*   **Naming Conventions:** Apply naming conventions appropriate for the `toname`.
-*   **Standard Libraries:** Leverage standard libraries of the `toname` and `toversion` whenever possible.
-*   **Performance & Readability:** Strive for both efficient and readable code in the target technology.
-*   **Modern Features:** If applicable and beneficial, utilize new features available in the `toversion` of the `toname`.
-*   **Leverage Reference Docs:** Carefully consider the `reference_docs`. If they provide specific guidance for converting from `fromname` `fromversion` to `toname` `toversion`, or highlight newer/better approaches in the target technology, incorporate that wisdom into your transformation.
-
-Output:
-Return only the raw, transformed code string.
+Focus: Convert the exact functionality provided, nothing more, nothing less.
 """
