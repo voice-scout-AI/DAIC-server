@@ -6,19 +6,23 @@ from langchain_upstage import ChatUpstage
 from pydantic import BaseModel, Field
 
 from app.core.callbacks import PromptLoggerCallback
-from app.core.config import ANALYZE_PROMPT
 from app.core.decorators import measure_time
+from app.core.prompts import ANALYZE_PROMPT
 
 
 class TechnologyInfo(BaseModel):
-    name: str = Field(description="기술의 이름")
+    name: str = Field(description="The canonical, standardized name of the technology (e.g., \"React\", \"Python\").")
     type: Literal["language", "framework", "library"] = Field(
-        description="기술의 타입, (language, framework, library) 중 하나를 골라야 함.")
-    possible_versions: List[str] = Field(description="가능한 버전들의 리스트, 여러 개일 경우 가장 최근 버전이 먼저 오는 순서")
+        description="The type of the technology, must be one of 'language', 'framework', or 'library'."
+    )
+    possible_versions: List[str] = Field(
+        description="A list of potential versions (e.g., [\"18.2.x\", \"3.10.x\"]). List the most probable or latest compatible versions first, adhering to A.B or A.B.x format as specified in system prompt."
+    )
 
 
 class CodeAnalysisOutput(BaseModel):
-    technologies: List[TechnologyInfo] = Field(description="분석된 기술들의 리스트")
+    technologies: List[TechnologyInfo] = Field(
+        description="A list of TechnologyInfo objects detailing the analyzed technologies.")
 
 
 class CodeAnalyser(Runnable):
@@ -27,22 +31,14 @@ class CodeAnalyser(Runnable):
 
         self.analysis_prompt = ChatPromptTemplate.from_messages([
             ("system", ANALYZE_PROMPT),
-            ("human", "다음 코드를 분석해주세요:\n\n{code}")
+            ("human",
+             "Please analyze the following code snippet to identify the programming languages, frameworks, and libraries used, along with their potential versions. Follow the detailed instructions provided in the system prompt for technology identification, name normalization, version extraction, and output formatting.\n\nCode to analyze:\n{code}")
         ])
 
         self.chain = self.analysis_prompt | self.structured_chat
 
     @measure_time
     def invoke(self, input: Dict[str, Any], config=None) -> Dict[str, Any]:
-        result = self.chain.invoke({"code": input['code']}, config={"callbacks": [PromptLoggerCallback()]})
+        result = self.chain.invoke({"code": input.get('code')}, config={"callbacks": [PromptLoggerCallback()]})
 
-        technologies = []
-        for i, tech in enumerate(result.technologies):
-            technologies.append({
-                "id": i,
-                "name": tech.name,
-                "type": tech.type,
-                "possible_versions": tech.possible_versions
-            })
-
-        return {"id": input["id"], "tech": technologies}
+        return {"id": input.get("id"), "tech": result.technologies}

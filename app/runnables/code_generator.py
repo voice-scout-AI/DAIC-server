@@ -6,13 +6,14 @@ from langchain_upstage import ChatUpstage
 from pydantic import BaseModel, Field
 
 from app.core.callbacks import PromptLoggerCallback
-from app.core.config import CODE_GENERATOR_PROMPT
 from app.core.decorators import measure_time
+from app.core.prompts import CODE_GENERATOR_PROMPT
 from app.core.state import app_state
 
 
 class ConvertedCodeOutput(BaseModel):
-    code: str = Field(description="변환된 코드")
+    code: str = Field(
+        description="The transformed source code snippet converted to the target technology, maintaining functional equivalence while following target technology best practices and conventions")
 
 
 class CodeGenerator(Runnable):
@@ -21,26 +22,31 @@ class CodeGenerator(Runnable):
             schema=ConvertedCodeOutput)
         self.conversion_prompt = ChatPromptTemplate.from_messages([
             ("system", CODE_GENERATOR_PROMPT),
-            ("human", """다음 코드를 변환해주세요:
+            ("human", """Please transform the following code snippet:
 
-원본 기술: {fromname} {fromversion}
-타겟 기술: {toname} {toversion}
+Source Technology: {fromname} {fromversion}
+Target Technology: {toname} {toversion}
 
-참고 문서:
+Reference Documentation:
 {reference_docs}
 
-원본 코드:
+Original Code:
 {code}
 
-위 코드를 {toname} {toversion}으로 변환해주세요. 참고 문서의 내용을 활용하여 더 정확하고 최신의 방법으로 변환해주세요.""")
+Convert this code to {toname} {toversion} while ensuring:
+1. Functional equivalence is preserved
+2. Target technology best practices and idiomatic patterns are followed
+3. Version-specific features and APIs of {toversion} are utilized appropriately
+4. All necessary dependencies and imports are included
+5. Reference documentation insights are incorporated for optimal conversion
+
+Provide only the raw transformed code without any markdown formatting or explanatory text.""")
         ])
 
-        # 구조화된 출력을 사용하는 체인 구성
         self.chain = self.conversion_prompt | self.structured_chat
 
     @measure_time
     def invoke(self, input: Dict[str, Any], config=None) -> Dict[str, Any]:
-        # Redis에서 원본 코드 가져오기
         code = app_state.redis_client.get(input["id"])
 
         result = self.chain.invoke({

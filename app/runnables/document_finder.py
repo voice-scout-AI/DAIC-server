@@ -12,7 +12,7 @@ class DocumentFinder(Runnable):
 
     @measure_time
     def invoke(self, input: Dict[str, Any], config=None) -> Dict[str, Any]:
-        query = f"{input['fromname']}에서 {input['toname']}로 conversion시 주의해야할 것"
+        query = f"migrating from {input['fromname']} to {input['toname']} key considerations challenges best practices"
         relevant_docs = app_state.vector_store.similarity_search_with_score(query, k=3)
 
         filtered_docs = [(doc, score) for doc, score in relevant_docs if score <= self.score_threshold]

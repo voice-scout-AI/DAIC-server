@@ -1,87 +1,227 @@
 {
   "documents": [
     {
-      "page_content": "React 18 이상으로 업그레이드할 때는 컴포넌트 클래스말고 함수로 선언해야함.",
+      "page_content": "When upgrading to React 18 or later, it is highly recommended to transition from class components to functional components using Hooks. This change aligns with modern React practices, offering benefits like improved code readability, easier state management, and better logic reuse through custom Hooks. Key aspects include understanding the rules of Hooks and refactoring lifecycle methods.",
       "metadata": {
         "from": "React",
         "to": "React"
       }
     },
     {
-      "page_content": "React에서 Vue로 마이그레이션할 때는 더 step-by-step으로 생각해줘.",
+      "page_content": "Migrating from React to Vue.js involves a paradigm shift in areas like template syntax (JSX vs. Vue templates), state management (e.g., Redux/Context API vs. Pinia/Vuex), and component API (e.g., lifecycle methods). A phased approach, focusing on one feature set at a time, is advisable. Consider Vue's built-in reactivity system and its more batteries-included nature.",
       "metadata": {
         "from": "React",
-        "to": "Vue"
+        "to": "Vue.js"
       }
     },
     {
-      "page_content": "Vue 2에서 Vue 3로 마이그레이션할 때 Composition API를 사용하면 더 나은 타입 추론과 로직 재사용이 가능합니다.",
+      "page_content": "Key considerations when migrating from Vue.js 2 to Vue.js 3 include the mandatory adoption of the Composition API for new features and better scalability, changes in the reactivity system (Proxy-based), the introduction of Fragments and Teleport, and updates to the virtual DOM. Ensure to update dependencies like Vue Router and Vuex to their Vue 3 compatible versions and check for breaking changes in third-party libraries.",
       "metadata": {
-        "from": "Vue 2",
-        "to": "Vue 3"
+        "from": "Vue.js 2",
+        "to": "Vue.js 3"
       }
     },
     {
-      "page_content": "Angular에서 React로 전환할 때는 컴포넌트 기반 아키텍처는 유사하지만 상태 관리 방식이 다르므로 Redux나 Zustand 같은 상태 관리 라이브러리를 고려해야 합니다.",
+      "page_content": "Transitioning from Angular to React means moving from a comprehensive, opinionated framework with built-in solutions (like dependency injection, advanced forms, HTTP client, and routing) to a library focused on the view layer. This often requires integrating third-party libraries for routing (e.g., React Router), global state management (e.g., Redux, Zustand), and form handling to achieve similar functionality.",
       "metadata": {
         "from": "Angular",
         "to": "React"
       }
     },
     {
-      "page_content": "jQuery에서 React로 전환할 때는 DOM 직접 조작 방식에서 선언적 UI 방식으로 사고를 전환해야 합니다.",
+      "page_content": "Migrating from jQuery to React involves a fundamental shift from imperative DOM manipulation to a declarative, component-based architecture. Instead of selecting elements and changing them directly, you define components whose render output changes based on their state and props. This leads to more predictable UIs and better code organization.",
       "metadata": {
         "from": "jQuery",
         "to": "React"
       }
     },
     {
-      "page_content": "Express.js에서 Fastify로 전환하면 더 빠른 성능과 TypeScript 지원을 얻을 수 있지만, 미들웨어 생태계가 다릅니다.",
+      "page_content": "When considering a move from Express.js to Fastify, key benefits include Fastify's higher performance due to its optimized architecture and schema-based validation for routes (improving reliability and developer experience). However, assess the middleware ecosystem; Fastify has its own set of plugins, and direct Express.js middleware compatibility is limited, requiring potential rewrites or finding alternatives.",
       "metadata": {
         "from": "Express.js",
         "to": "Fastify"
       }
     },
     {
-      "page_content": "MongoDB에서 PostgreSQL로 전환할 때는 스키마 설계를 다시 해야 하고, NoSQL의 유연성 대신 ACID 트랜잭션의 안정성을 얻게 됩니다.",
+      "page_content": "Migrating from MongoDB (NoSQL, document-oriented) to PostgreSQL (SQL, relational) requires a significant data modeling effort. This includes designing a relational schema, defining relationships with foreign keys, establishing appropriate indexing strategies, and planning data transformation. You gain ACID compliance, complex query capabilities, and join operations, but lose schema flexibility and horizontal scalability patterns inherent to MongoDB.",
       "metadata": {
         "from": "MongoDB",
         "to": "PostgreSQL"
       }
     },
     {
-      "page_content": "Webpack에서 Vite로 전환하면 개발 서버 시작 시간이 크게 단축되지만, 일부 플러그인 호환성 문제가 있을 수 있습니다.",
+      "page_content": "Shifting from Webpack to Vite offers substantially faster development server startup and Hot Module Replacement (HMR) due to Vite's use of native ES modules during development and esbuild for pre-bundling dependencies. Key considerations include migrating Webpack configurations (loaders, plugins) to Vite's Rollup-based plugin system and understanding differences in how assets and public files are handled.",
       "metadata": {
         "from": "Webpack",
         "to": "Vite"
       }
     },
     {
-      "page_content": "Jest에서 Vitest로 전환할 때는 설정이 간단해지고 ES 모듈 지원이 더 좋아지지만, 일부 Jest 특화 기능들을 다시 구현해야 할 수 있습니다.",
+      "page_content": "Transitioning from Jest to Vitest typically results in faster test execution and simpler configuration, especially in Vite-based projects. Vitest offers a Jest-compatible API for a smoother migration, covering most common use cases like mocking and snapshot testing. However, differences exist in some advanced features, global setup, or specific reporter integrations that may require attention.",
       "metadata": {
         "from": "Jest",
         "to": "Vitest"
       }
     },
     {
-      "page_content": "Sass에서 Tailwind CSS로 전환할 때는 유틸리티 퍼스트 접근법을 익혀야 하고, 커스텀 CSS 작성량이 크게 줄어듭니다.",
+      "page_content": "Moving from Sass to Tailwind CSS means adopting a utility-first CSS methodology. This approach reduces the need for writing custom CSS by composing styles directly in HTML using predefined utility classes. It requires a mindset shift from semantic class naming and style encapsulation in Sass, and you'll need to configure Tailwind's `tailwind.config.js` to customize design tokens and include necessary plugins.",
       "metadata": {
         "from": "Sass",
         "to": "Tailwind CSS"
       }
     },
     {
-      "page_content": "Redux에서 Zustand로 전환하면 보일러플레이트 코드가 크게 줄어들고 더 간단한 상태 관리가 가능하지만, 미들웨어 생태계는 제한적입니다.",
+      "page_content": "Migrating from Redux to Zustand for state management in React applications typically leads to a significant reduction in boilerplate code (actions, reducers, dispatchers) and a simpler, more hook-based API. Zustand is often faster to set up and its state is accessed directly. However, Redux has a more extensive middleware ecosystem and mature developer tools, which might be a factor for very complex applications.",
       "metadata": {
         "from": "Redux",
         "to": "Zustand"
       }
     },
     {
-      "page_content": "Next.js에서 Remix로 전환할 때는 서버 사이드 렌더링 방식이 다르므로 데이터 로딩 패턴을 새로 익혀야 합니다.",
+      "page_content": "When migrating from Next.js to Remix, be prepared for different approaches to data loading and mutations, which are tightly coupled with route components in Remix using web standards like HTML forms, actions, and loaders. Remix's focus on progressive enhancement, nested routing with shared layouts, and its server-centric model for data handling differs significantly from Next.js's page-based routing and its variety of data fetching methods (getServerSideProps, getStaticProps, API routes).",
       "metadata": {
         "from": "Next.js",
         "to": "Remix"
+      }
+    },
+    {
+      "page_content": "Transitioning from Angular to Vue.js requires understanding the differences between Angular's TypeScript-first approach with decorators and Vue's more flexible template-based system. Key areas include migrating from Angular's dependency injection to Vue's provide/inject pattern, adapting RxJS observables to Vue's reactive data, and converting Angular's component lifecycle hooks to Vue's equivalent lifecycle methods.",
+      "metadata": {
+        "from": "Angular",
+        "to": "Vue.js"
+      }
+    },
+    {
+      "page_content": "Moving from Python Flask to FastAPI offers significant benefits including automatic API documentation generation, built-in data validation using Pydantic models, and native async/await support for better performance. The migration involves converting route decorators, adapting request/response handling patterns, and leveraging FastAPI's type hints for automatic request validation and serialization.",
+      "metadata": {
+        "from": "Flask",
+        "to": "FastAPI"
+      }
+    },
+    {
+      "page_content": "Migrating from MySQL to PostgreSQL involves understanding differences in data types (e.g., JSON support, arrays), SQL syntax variations, and indexing strategies. PostgreSQL offers advanced features like window functions, CTEs, and better JSON handling, but requires careful attention to differences in string concatenation, date functions, and auto-increment mechanisms (SERIAL vs AUTO_INCREMENT).",
+      "metadata": {
+        "from": "MySQL",
+        "to": "PostgreSQL"
+      }
+    },
+    {
+      "page_content": "Switching from Docker Compose to Kubernetes requires a fundamental shift from simple container orchestration to a full container orchestration platform. This involves converting docker-compose.yml files to Kubernetes manifests (Deployments, Services, ConfigMaps), understanding pod networking, implementing health checks, and setting up proper resource limits and scaling policies.",
+      "metadata": {
+        "from": "Docker Compose",
+        "to": "Kubernetes"
+      }
+    },
+    {
+      "page_content": "Transitioning from REST APIs to GraphQL involves restructuring your API design from multiple endpoints to a single endpoint with flexible query capabilities. Key considerations include designing a unified schema, implementing resolvers for data fetching, handling caching strategies differently, and educating frontend teams on GraphQL query syntax and best practices.",
+      "metadata": {
+        "from": "REST API",
+        "to": "GraphQL"
+      }
+    },
+    {
+      "page_content": "Moving from vanilla JavaScript to TypeScript provides static type checking and improved developer experience but requires adding type annotations, configuring the TypeScript compiler, and potentially refactoring existing code to be type-safe. Benefits include better IDE support, catch-errors at compile time, and improved code maintainability in larger projects.",
+      "metadata": {
+        "from": "JavaScript",
+        "to": "TypeScript"
+      }
+    },
+    {
+      "page_content": "Migrating from npm to pnpm offers faster installation times and more efficient disk space usage through hard linking and a strict node_modules structure. Key considerations include updating CI/CD pipelines, understanding the stricter dependency resolution, and potentially adjusting scripts that rely on npm-specific behaviors or flat node_modules structure.",
+      "metadata": {
+        "from": "npm",
+        "to": "pnpm"
+      }
+    },
+    {
+      "page_content": "Transitioning from ESLint to Biome provides faster linting and formatting with a single tool, reducing the need for separate Prettier configuration. However, Biome's rule set is currently more limited than ESLint's extensive plugin ecosystem, so you may need to adjust your linting requirements or wait for additional rules to be implemented.",
+      "metadata": {
+        "from": "ESLint",
+        "to": "Biome"
+      }
+    },
+    {
+      "page_content": "Moving from Create React App to Vite offers significantly faster development builds and hot module replacement. The migration involves updating scripts in package.json, moving index.html to the root directory, adjusting import paths for assets, and potentially updating environment variable naming conventions from REACT_APP_ to VITE_.",
+      "metadata": {
+        "from": "Create React App",
+        "to": "Vite"
+      }
+    },
+    {
+      "page_content": "Switching from Node.js to Deno involves adapting to built-in TypeScript support, a different module system (URL-based imports vs npm packages), and enhanced security with permission-based access control. Key changes include updating import statements, removing package.json dependencies in favor of direct URL imports, and adjusting to Deno's standard library.",
+      "metadata": {
+        "from": "Node.js",
+        "to": "Deno"
+      }
+    },
+    {
+      "page_content": "Migrating from Ruby on Rails to Node.js Express requires rewriting application logic from Ruby to JavaScript, restructuring the MVC pattern to Express's more flexible approach, and replacing Rails' conventions with explicit configurations. Consider differences in ORM (ActiveRecord vs Sequelize/Prisma), templating engines, and middleware patterns.",
+      "metadata": {
+        "from": "Ruby on Rails",
+        "to": "Express.js"
+      }
+    },
+    {
+      "page_content": "Transitioning from Apache to Nginx typically results in better performance for static file serving and reverse proxying. The migration involves converting .htaccess rules to Nginx configuration syntax, understanding Nginx's event-driven architecture, and adjusting virtual host configurations to Nginx's server block format.",
+      "metadata": {
+        "from": "Apache",
+        "to": "Nginx"
+      }
+    },
+    {
+      "page_content": "Moving from styled-components to CSS Modules involves shifting from CSS-in-JS to separate CSS files with locally scoped class names. This change can improve build performance and reduce JavaScript bundle size, but requires restructuring component styling patterns and potentially losing some dynamic styling capabilities.",
+      "metadata": {
+        "from": "styled-components",
+        "to": "CSS Modules"
+      }
+    },
+    {
+      "page_content": "Migrating from GitHub Actions to GitLab CI involves converting YAML workflow syntax, understanding GitLab's job and stage concepts, and adapting to GitLab's built-in Docker registry and environment management. Key differences include variable syntax, artifact handling, and the availability of GitLab-specific features like merge request pipelines.",
+      "metadata": {
+        "from": "GitHub Actions",
+        "to": "GitLab CI"
+      }
+    },
+    {
+      "page_content": "Switching from AWS to Google Cloud Platform requires mapping services (EC2 to Compute Engine, S3 to Cloud Storage, RDS to Cloud SQL) and understanding different pricing models and regional availability. Consider differences in IAM systems, networking concepts, and service-specific features when planning the migration strategy.",
+      "metadata": {
+        "from": "AWS",
+        "to": "Google Cloud Platform"
+      }
+    },
+    {
+      "page_content": "Transitioning from Svelte to React involves moving from Svelte's compile-time optimizations to React's virtual DOM approach. Key changes include adapting from Svelte's reactive assignments to React's useState hooks, converting Svelte stores to React context or state management libraries, and restructuring component lifecycle from Svelte's simplicity to React's hooks system.",
+      "metadata": {
+        "from": "Svelte",
+        "to": "React"
+      }
+    },
+    {
+      "page_content": "Moving from Redis to Memcached involves understanding the differences in data structure support (Redis supports complex data types while Memcached is key-value only), persistence options, and clustering capabilities. Consider that Memcached is simpler and potentially faster for basic caching, while Redis offers more features like pub/sub and transactions.",
+      "metadata": {
+        "from": "Redis",
+        "to": "Memcached"
+      }
+    },
+    {
+      "page_content": "Migrating from Electron to Tauri offers significant benefits in terms of bundle size and resource usage by leveraging system webviews instead of bundling Chromium. The migration involves rewriting Node.js backend logic to Rust, adapting inter-process communication patterns, and adjusting to Tauri's security-focused permission system.",
+      "metadata": {
+        "from": "Electron",
+        "to": "Tauri"
+      }
+    },
+    {
+      "page_content": "Switching from Mocha to Jest provides a more opinionated testing framework with built-in assertions, mocking, and code coverage. The migration involves converting test syntax, adapting setup and teardown patterns, and potentially simplifying test configurations due to Jest's zero-configuration approach for most projects.",
+      "metadata": {
+        "from": "Mocha",
+        "to": "Jest"
+      }
+    },
+    {
+      "page_content": "Transitioning from Socket.io to native WebSockets involves removing the Socket.io abstraction layer and handling lower-level WebSocket events directly. While you lose Socket.io's automatic fallback mechanisms and room management features, you gain more control over the connection and potentially better performance for simple real-time communication needs.",
+      "metadata": {
+        "from": "Socket.io",
+        "to": "WebSockets"
       }
     }
   ]
