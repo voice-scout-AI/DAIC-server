@@ -2,6 +2,7 @@ from typing import Optional
 
 import redis
 
+from app.core.config import REDIS_HOST, REDIS_PORT
 from app.rag.vector_store import VectorStore
 
 
@@ -15,8 +16,8 @@ class AppState:
             cls._instance = super(AppState, cls).__new__(cls)
         return cls._instance
 
-    def initialize_redis(self, host: str = "localhost", port: int = 6379):
-        self._redis_client = redis.Redis(host=host, port=port, decode_responses=True)
+    def initialize_redis(self):
+        self._redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
         print("redis 로드 성공")
 
     def initialize_vector_store(self):

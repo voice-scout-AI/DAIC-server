@@ -11,7 +11,8 @@ from app.services.transform_code import CodeTransformerChain
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    app_state.initialize_redis(host="localhost", port=6379)
+    # Redis 초기화 (환경 변수 또는 기본값 사용)
+    app_state.initialize_redis()
     app_state.initialize_vector_store()
 
     yield
