@@ -4,11 +4,13 @@ from contextlib import asynccontextmanager
 
 import gradio as gr
 from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.core.state import app_state
-from app.ui.gradio_interface import create_gradio_app
 from app.services.process_images import ImageProcessorChain
 from app.services.transform_code import CodeTransformerChain
+from app.ui.gradio_interface import create_gradio_app
 
 
 @asynccontextmanager
@@ -23,6 +25,19 @@ async def lifespan(app: FastAPI):
 
 UPLOAD_DIRECTORY = "./uploads"
 app = FastAPI(lifespan=lifespan)
+
+# 정적 파일 서빙 설정
+if os.path.exists("./statics"):
+    app.mount("/static", StaticFiles(directory="statics"), name="static")
+
+
+# Favicon 엔드포인트 추가
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    favicon_path = "./statics/favicon.svg"
+    if os.path.exists(favicon_path):
+        return FileResponse(favicon_path)
+    return FileResponse("./statics/favicon.ico")
 
 
 @app.get("/")
