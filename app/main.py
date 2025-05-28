@@ -2,9 +2,11 @@ import os
 import shutil
 from contextlib import asynccontextmanager
 
+import gradio as gr
 from fastapi import FastAPI, File, UploadFile
 
 from app.core.state import app_state
+from app.ui.gradio_interface import create_gradio_app
 from app.services.process_images import ImageProcessorChain
 from app.services.transform_code import CodeTransformerChain
 
@@ -58,3 +60,8 @@ async def transform(body: dict):
     })
 
     return result
+
+
+# Gradio 앱을 FastAPI에 마운트
+gradio_app = create_gradio_app(UPLOAD_DIRECTORY)
+app = gr.mount_gradio_app(app, gradio_app, path="/gradio")
