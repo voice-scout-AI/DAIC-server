@@ -70,4 +70,4 @@ class CandidateFinder(Runnable):
                     "suggestions": suggestions_list
                 })
 
-        return {"id": input.get("id"), "from": input.get("tech"), "to": processed_candidates}
+        return {"id": input.get("id"), "from": input.get("tech"), "to": processed_candidates, 'code': input.get("code")}

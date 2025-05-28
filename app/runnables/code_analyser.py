@@ -41,4 +41,4 @@ class CodeAnalyser(Runnable):
     def invoke(self, input: Dict[str, Any], config=None) -> Dict[str, Any]:
         result = self.chain.invoke({"code": input.get('code')}, config={"callbacks": [PromptLoggerCallback()]})
 
-        return {"id": input.get("id"), "tech": result.technologies}
+        return {"id": input.get("id"), "tech": result.technologies, "code": input.get('code')}
